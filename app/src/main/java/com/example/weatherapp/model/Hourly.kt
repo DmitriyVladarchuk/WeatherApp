@@ -16,4 +16,13 @@ data class Hourly(
             )
         """.trimIndent()
     }
+
+    fun toWeatherPeriods(): List<WeatherPeriod> {
+        return time.indices.map { index ->
+            val timeString = time[index]
+            val temp = temperature[index].toDoubleOrNull() ?: 0.0
+            val code = weatherCode[index].toIntOrNull() ?: 0
+            WeatherPeriod(timeString, temp, code)
+        }
+    }
 }

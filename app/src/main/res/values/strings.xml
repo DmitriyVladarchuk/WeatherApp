@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+
+    <string name="current_location">Current Location</string>
+    <string name="in_sync">in sync</string>
+    <string name="not_sync">not sync</string>
+
+    <string name="error">Error</string>
+
 </resources>

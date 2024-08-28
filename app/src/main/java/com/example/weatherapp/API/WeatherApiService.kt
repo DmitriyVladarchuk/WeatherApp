@@ -12,7 +12,8 @@ interface WeatherApiService {
         @Query("latitude") latitude: Float,
         @Query("longitude") longitude: Float,
         @Query("hourly") hourly: String = "temperature_2m,weather_code",
-        @Query("timezone") timezone: String = "GMT",
+        @Query("daily") daily: String = "sunrise,sunset",
+        @Query("timezone") timezone: String = "auto",
         @Query("forecast_days") days: Int = 1
     ): Call<Forecast>
 }

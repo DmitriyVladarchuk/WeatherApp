@@ -4,7 +4,8 @@ data class Forecast(
     val latitude: Float,
     val longitude: Float,
     val timezone: String,
-    val hourly: Hourly
+    val hourly: Hourly,
+    val daily: Daily
 ) {
     override fun toString(): String {
         return """

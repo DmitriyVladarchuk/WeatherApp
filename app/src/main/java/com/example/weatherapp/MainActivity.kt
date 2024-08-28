@@ -11,7 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.example.weatherapp.ui.views.Home
+import com.example.weatherapp.ui.views.Locations
+import com.example.weatherapp.ui.views.Routes
+import com.example.weatherapp.ui.views.Settings
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,28 +27,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+
+                    val navController = rememberNavController()
+
+                    NavHost(navController = navController, startDestination = Routes.Home.route) {
+
+                        composable(Routes.Home.route) { Home(navController, Modifier.padding(innerPadding)) }
+                        composable(Routes.Locations.route) { Locations(Modifier.padding(innerPadding)) }
+                        composable(Routes.Settings.route) { Settings(Modifier.padding(innerPadding)) }
+
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WeatherAppTheme {
-        Greeting("Android")
     }
 }
