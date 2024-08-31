@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -17,6 +19,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
@@ -24,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.weatherapp.R
@@ -32,8 +40,6 @@ import com.example.weatherapp.ui.theme.Typography
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Main(navController: NavController, modifier: Modifier = Modifier, viewModel: HomeViewModel = viewModel()) {
-
-    val scrollState = rememberScrollState()
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -44,19 +50,33 @@ fun Main(navController: NavController, modifier: Modifier = Modifier, viewModel:
             clickableSettings = { navController.navigate(Routes.Settings.route) }
         )
 
-        val pagerState = rememberPagerState { 2 }
+        val verticalPagerState = rememberPagerState { 2 }
+        val horizontalPagerState = rememberPagerState { 2 }
+        var targetPage by remember { mutableStateOf<Int?>(null) }
 
-        VerticalPager(state = pagerState, Modifier.fillMaxWidth()) { page ->
+        LaunchedEffect(targetPage) {
+            targetPage?.let {
+                horizontalPagerState.animateScrollToPage(it)
+                targetPage = null
+            }
+        }
+
+        VerticalPager(state = verticalPagerState, Modifier.fillMaxWidth()) { page ->
             if (page == 0)
                 Home(viewModel)
             else {
 
-                // Здесь создовать Pager и state
+                DetailsHeader(
+                    currentPage = horizontalPagerState.currentPage,
+                    clickableDetails = { targetPage = 0 },
+                    clickableForecast = { targetPage = 1 }
+                )
 
-                Details(viewModel)
+                HorizontalPager(state = horizontalPagerState, modifier = Modifier.fillMaxSize()) { page ->
+                    if (page == 0) Details(viewModel) else Forecast(viewModel)
+                }
             }
         }
-
     }
 }
 
@@ -103,5 +123,36 @@ fun Header(currentLocation: String, clickableLocations: () -> Unit, clickableSet
             tint = colorResource(R.color.translucent)
         )
 
+    }
+}
+
+@Composable
+fun DetailsHeader(currentPage: Int, clickableDetails: () -> Unit, clickableForecast: () -> Unit) {
+    Row(
+        modifier = Modifier.padding(start = 30.dp, top = 30.dp, end = 30.dp, bottom = 10.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.details),
+            style = Typography.titleLarge,
+            fontSize = 24.sp,
+            fontWeight = if (currentPage == 0) FontWeight.Bold else FontWeight.Normal,
+            color = if (currentPage == 0) colorResource(R.color.content) else colorResource(R.color.translucent),
+            modifier = Modifier.clickable {
+                clickableDetails()
+            }
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Text(
+            text = stringResource(R.string.forecast),
+            style = Typography.titleLarge,
+            fontSize = 24.sp,
+            fontWeight = if (currentPage == 1) FontWeight.Bold else FontWeight.Normal,
+            color = if (currentPage == 1) colorResource(R.color.content) else colorResource(R.color.translucent),
+            modifier = Modifier.clickable {
+                clickableForecast()
+            }
+        )
     }
 }

@@ -13,10 +13,10 @@ interface WeatherApiService {
         @Query("latitude") latitude: Float,
         @Query("longitude") longitude: Float,
         @Query("hourly") hourly: String = "temperature_2m,weather_code",
-        @Query("daily") daily: String = "sunrise,sunset",
+        @Query("daily") daily: String = "weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset",
         @Query("timezone") timezone: String = "auto",
         @Query("current") current: String = "temperature_2m,relative_humidity_2m,precipitation,weather_code,pressure_msl,wind_speed_10m",
-        @Query("forecast_days") days: Int = 1
+        @Query("forecast_days") days: Int = 7
     ): Call<Forecast>
 
 }

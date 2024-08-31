@@ -42,8 +42,7 @@ class Repository private constructor() {
     private var apiService = RetrofitClient.weatherApiService
 
     var inSync: MutableLiveData<Boolean> = MutableLiveData(false)
-    val weatherToday: MutableLiveData<Forecast> = MutableLiveData()
-    val currentWeather: MutableLiveData<WeatherPeriod> = MutableLiveData()
+    val forecastWeather: MutableLiveData<Forecast> = MutableLiveData()
 
     fun fetchWeather() {
         //getCurrentWeather()
@@ -56,11 +55,11 @@ class Repository private constructor() {
         call.enqueue(object : Callback<Forecast> {
             override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
                 if (response.isSuccessful) {
-                    weatherToday.value = response.body()
+                    forecastWeather.value = response.body()
                     inSync.value = true
 
                     Log.d(TAG_API, "Ответ получен")
-                    Log.d(TAG_RESULT_API, weatherToday.value.toString())
+                    Log.d(TAG_RESULT_API, forecastWeather.value.toString())
                 } else {
                     inSync.value = false
 

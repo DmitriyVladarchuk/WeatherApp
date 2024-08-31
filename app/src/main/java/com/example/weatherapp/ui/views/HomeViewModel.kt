@@ -8,11 +8,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp.R
 import com.example.weatherapp.Repository
+import com.example.weatherapp.model.Daily
 import com.example.weatherapp.model.Forecast
 import com.example.weatherapp.model.WeatherPeriod
 import kotlinx.coroutines.launch
 import java.util.Date
+import kotlin.math.roundToInt
 
 class HomeViewModel : ViewModel() {
 
@@ -20,9 +23,9 @@ class HomeViewModel : ViewModel() {
 
     val inSync: LiveData<Boolean> = Repository.getInstance().inSync
 
-    val currentDate: Date = Date()
+    private val forecastWeather: MutableLiveData<Forecast> = Repository.getInstance().forecastWeather
 
-    val forecastWeather: MutableLiveData<Forecast> = Repository.getInstance().weatherToday
+    val forecastForWeek: MutableState<Daily?> = mutableStateOf(null)
 
     val weatherPeriod: MutableState<List<WeatherPeriod>> = mutableStateOf(emptyList())
 
@@ -37,19 +40,20 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
 
             forecastWeather.observeForever { forecast ->
-                weatherPeriod.value = forecast.hourly.toWeatherPeriods()
+                weatherPeriod.value = forecast.getForecastFor24hourly()
                 currentWeather.value = forecast.current
+                forecastForWeek.value = forecast.daily
             }
 
         }
     }
 
-    fun getSunrise(): String {
-        return forecastWeather.value?.daily?.sunrise?.first()?.substring(11, 16) ?: "N/A"
-    }
+    fun getMinTemperatureToday(): String = forecastForWeek.value?.minTemperature?.first()?.roundToInt()?.toString() ?: "N/A"
 
-    fun getSunset(): String {
-        return forecastWeather.value?.daily?.sunset?.last()?.substring(11, 16) ?: "N/A"
-    }
+    fun getMaxTemperatureToday(): String = forecastForWeek.value?.maxTemperature?.first()?.roundToInt()?.toString() ?: "N/A"
+
+    fun getSunrise(): String = forecastForWeek.value?.sunrise?.first()?.substring(11, 16) ?: "N/A"
+
+    fun getSunset(): String = forecastForWeek.value?.sunset?.last()?.substring(11, 16) ?: "N/A"
 
 }

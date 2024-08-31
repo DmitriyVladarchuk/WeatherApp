@@ -51,9 +51,9 @@ fun Home(viewModel: HomeViewModel = viewModel()) {
         SyncInfo(inSync = inSync)
 
         TemperatureToday(
-            temperature = viewModel.currentWeather.value?.temperature?.roundToInt().toString() ?: "N/A",
-            minTemperature = viewModel.weatherPeriod.value.minOfOrNull { it.temperature }?.roundToInt().toString() ?: "N/A",
-            maxTemperature = viewModel.weatherPeriod.value.maxOfOrNull { it.temperature }?.roundToInt().toString() ?: "N/A"
+            temperature = viewModel.currentWeather.value?.temperature?.roundToInt()?.toString() ?: "N/A",
+            minTemperature = viewModel.getMinTemperatureToday(),
+            maxTemperature = viewModel.getMaxTemperatureToday()
         )
 
         WeatherInfo(

@@ -20,16 +20,8 @@ fun Details(viewModel: HomeViewModel = viewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 30.dp, top = 35.dp)
+            .padding(start = 30.dp, top = 30.dp)
     ) {
-
-        Text(
-            text = stringResource(R.string.details),
-            style = Typography.titleLarge,
-            fontSize = 24.sp,
-            modifier = Modifier.padding(top = 30.dp, bottom = 10.dp),
-            fontWeight = FontWeight.Bold
-        )
 
         TextInfo(
             title = stringResource(R.string.precipitation),
