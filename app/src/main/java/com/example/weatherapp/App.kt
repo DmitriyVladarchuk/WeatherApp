@@ -21,7 +21,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Repository.getInstance().getWeather()
+        Repository.getInstance().fetchWeather()
     }
 
 }

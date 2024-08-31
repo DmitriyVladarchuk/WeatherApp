@@ -5,7 +5,8 @@ data class Forecast(
     val longitude: Float,
     val timezone: String,
     val hourly: Hourly,
-    val daily: Daily
+    val daily: Daily,
+    val current: WeatherPeriod
 ) {
     override fun toString(): String {
         return """

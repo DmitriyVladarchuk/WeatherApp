@@ -2,6 +2,7 @@ package com.example.weatherapp.model
 
 
 import com.example.weatherapp.R
+import com.google.gson.annotations.SerializedName
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -9,8 +10,12 @@ import java.time.format.DateTimeFormatter
 
 data class WeatherPeriod(
     val time: String,
-    val temperature: Double,
-    val weatherCode: Int?
+    @SerializedName("temperature_2m") val temperature: Double,
+    @SerializedName("weather_code") val weatherCode: Int?,
+    @SerializedName("relative_humidity_2m") val humidity: Int? = null,
+    @SerializedName("precipitation") val precipitation: Double? = null,
+    @SerializedName("pressure_msl") val pressure: Double? = null,
+    @SerializedName("wind_speed_10m") val windSpeed: Double? = null
 ) {
     fun getDate(): Long {
         val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME

@@ -26,14 +26,14 @@ val Typography = Typography(
     ),
     labelSmall = TextStyle(
         fontFamily = FontFamily(Font(R.font.ubuntu_condensed_regular)),
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         fontSize = 11.sp,
         //lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = FontFamily(Font(R.font.ubuntu_condensed_regular)),
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 18.sp,
         // lineHeight = 24.sp,
         letterSpacing = 0.5.sp

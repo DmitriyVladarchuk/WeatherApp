@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="units_interval">seconds</string>
+    <string name="units_temperature">°C</string>
+    <string name="units_humidity">%</string>
+    <string name="units_precipitation">mm</string>
+    <string name="units_pressure_msl">hPa</string>
+    <string name="units_wind_speed">km/h</string>
+    
+</resources>

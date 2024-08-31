@@ -5,6 +5,13 @@
     <string name="in_sync">in sync</string>
     <string name="not_sync">not sync</string>
 
+    <string name="details">Details</string>
+    <string name="forecast">Forecast</string>
+    <string name="precipitation">Precipitation</string>
+    <string name="se_wind">SE Wind</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+
     <string name="error">Error</string>
 
 </resources>

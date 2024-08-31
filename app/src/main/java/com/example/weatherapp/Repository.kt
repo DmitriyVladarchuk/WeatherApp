@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.weatherapp.API.RetrofitClient
 import com.example.weatherapp.model.Forecast
+import com.example.weatherapp.model.WeatherPeriod
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -42,8 +43,14 @@ class Repository private constructor() {
 
     var inSync: MutableLiveData<Boolean> = MutableLiveData(false)
     val weatherToday: MutableLiveData<Forecast> = MutableLiveData()
+    val currentWeather: MutableLiveData<WeatherPeriod> = MutableLiveData()
 
-    fun getWeather() {
+    fun fetchWeather() {
+        //getCurrentWeather()
+        getWeather()
+    }
+
+    private fun getWeather() {
         val call = apiService.getForecast(45.0448f, 38.976f)
 
         call.enqueue(object : Callback<Forecast> {
@@ -68,4 +75,5 @@ class Repository private constructor() {
             }
         })
     }
+    
 }

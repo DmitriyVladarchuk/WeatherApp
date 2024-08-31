@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.views
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,29 +33,14 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun fetchWeather() {
+
         viewModelScope.launch {
 
             forecastWeather.observeForever { forecast ->
                 weatherPeriod.value = forecast.hourly.toWeatherPeriods()
-
-                for (weather in weatherPeriod.value) {
-                    if (weather.getDate() >= currentDate.time) {
-                        currentWeather.value = weather
-                        break
-                    }
-                }
+                currentWeather.value = forecast.current
             }
 
-//            Repository.getInstance().weatherToday.observeForever { forecast ->
-//                weatherPeriod.value = forecast.hourly.toWeatherPeriods()
-//
-//                for (weather in weatherPeriod.value) {
-//                    if (weather.getDate() >= currentDate.time) {
-//                        currentWeather.value = weather
-//                        break
-//                    }
-//                }
-//            }
         }
     }
 
