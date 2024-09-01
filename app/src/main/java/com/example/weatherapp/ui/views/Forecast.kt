@@ -175,7 +175,7 @@ fun ItemDailyForecast(time: String, weatherCode: Int, maxTemperature: String, mi
         }
 
         Row(
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier.padding(top = 10.dp).align(Alignment.CenterHorizontally)
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.arrow_down),

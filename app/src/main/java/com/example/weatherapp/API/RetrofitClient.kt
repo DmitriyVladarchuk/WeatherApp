@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
     private const val BASE_URL = "https://api.open-meteo.com/"
+    private const val BASE_URL_GEOCODING = "https://geocoding-api.open-meteo.com/"
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
@@ -21,5 +22,14 @@ object RetrofitClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(WeatherApiService::class.java)
+    }
+
+    val geocodingApiService: GeocodingApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL_GEOCODING)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(GeocodingApiService::class.java)
     }
 }

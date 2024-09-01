@@ -7,8 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.weatherapp.API.GeocodingResponse
 import com.example.weatherapp.API.RetrofitClient
 import com.example.weatherapp.model.Forecast
+import com.example.weatherapp.model.Location
 import com.example.weatherapp.model.WeatherPeriod
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,10 +41,13 @@ class Repository private constructor() {
         myCoroutineScope.cancel()
     }
 
-    private var apiService = RetrofitClient.weatherApiService
+    private var weatherApi = RetrofitClient.weatherApiService
+    private var geocodingApi = RetrofitClient.geocodingApiService
 
     var inSync: MutableLiveData<Boolean> = MutableLiveData(false)
     val forecastWeather: MutableLiveData<Forecast> = MutableLiveData()
+    val locations: MutableLiveData<List<Location>> = MutableLiveData()
+
 
     fun fetchWeather() {
         //getCurrentWeather()
@@ -50,7 +55,7 @@ class Repository private constructor() {
     }
 
     private fun getWeather() {
-        val call = apiService.getForecast(45.0448f, 38.976f)
+        val call = weatherApi.getForecast(45.0448f, 38.976f)
 
         call.enqueue(object : Callback<Forecast> {
             override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
@@ -71,6 +76,25 @@ class Repository private constructor() {
                 inSync.value = false
 
                 Log.d(TAG_API,"Ошибка: ${t.message}")
+            }
+        })
+    }
+
+    fun fetchLocations(name: String) {
+        val call = geocodingApi.searchLocation(name)
+
+        call.enqueue(object : Callback<GeocodingResponse> {
+            override fun onResponse(call: Call<GeocodingResponse>, response: Response<GeocodingResponse>) {
+                if (response.isSuccessful) {
+                    locations.value = response.body()?.results
+                    Log.d(TAG_API, "Локации получены")
+                } else {
+                    Log.d(TAG_API, "Ошибка: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<GeocodingResponse>, t: Throwable) {
+                Log.d(TAG_API, "Ошибка: ${t.message}")
             }
         })
     }

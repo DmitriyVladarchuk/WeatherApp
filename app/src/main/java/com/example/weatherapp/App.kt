@@ -22,6 +22,8 @@ class App : Application() {
         super.onCreate()
 
         Repository.getInstance().fetchWeather()
+
+        Repository.getInstance().fetchLocations("Berlin")
     }
 
 }
