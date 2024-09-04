@@ -86,5 +86,9 @@ class WeatherRepository private constructor() {
             }
         })
     }
+
+    fun clearLocations() {
+        locations.value = mutableListOf()
+    }
     
 }

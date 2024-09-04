@@ -24,7 +24,7 @@ class App : Application() {
 
         WeatherRepository.getInstance().fetchWeather()
 
-        WeatherRepository.getInstance().fetchLocations("Berlin")
+        //WeatherRepository.getInstance().fetchLocations("Berlin")
     }
 
 }
