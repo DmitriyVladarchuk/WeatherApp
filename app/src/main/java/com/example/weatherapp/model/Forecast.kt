@@ -30,7 +30,10 @@ data class Forecast(
 
         val currentTime = getCurrentTime()
 
-        val startIndex = hourly.time.indexOfFirst { it.substring(11, 16) >= currentTime }
+        val startIndex = hourly.time.indexOfFirst {
+            val time = it.substring(11, 16)
+            time >= currentTime || (time == "00:00" && currentTime >= "23:00")
+        }
 
         if (startIndex == -1) {
             println("No forecast data available for the current time")

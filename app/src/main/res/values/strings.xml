@@ -15,6 +15,8 @@
     <string name="hourly_forecast">Hourly Forecast</string>
     <string name="daily_forecast">Daily Forecast</string>
 
+    <string name="select_city">Select City</string>
+
     <string name="error">Error</string>
 
 </resources>

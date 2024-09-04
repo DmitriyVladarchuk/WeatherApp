@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui.views
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,22 +7,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.R
-import com.example.weatherapp.Repository
+import com.example.weatherapp.repositories.WeatherRepository
 import com.example.weatherapp.model.Daily
 import com.example.weatherapp.model.Forecast
 import com.example.weatherapp.model.WeatherPeriod
 import kotlinx.coroutines.launch
-import java.util.Date
 import kotlin.math.roundToInt
 
 class HomeViewModel : ViewModel() {
 
     val currentLocation by mutableStateOf("Краснодар")
 
-    val inSync: LiveData<Boolean> = Repository.getInstance().inSync
+    val inSync: LiveData<Boolean> = WeatherRepository.getInstance().inSync
 
-    private val forecastWeather: MutableLiveData<Forecast> = Repository.getInstance().forecastWeather
+    private val forecastWeather: MutableLiveData<Forecast> = WeatherRepository.getInstance().forecastWeather
 
     val forecastForWeek: MutableState<Daily?> = mutableStateOf(null)
 

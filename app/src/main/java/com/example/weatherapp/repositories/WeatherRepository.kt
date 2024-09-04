@@ -1,17 +1,11 @@
-package com.example.weatherapp
+package com.example.weatherapp.repositories
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.weatherapp.API.GeocodingResponse
 import com.example.weatherapp.API.RetrofitClient
 import com.example.weatherapp.model.Forecast
 import com.example.weatherapp.model.Location
-import com.example.weatherapp.model.WeatherPeriod
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -23,22 +17,16 @@ import java.lang.IllegalStateException
 const val TAG_API = "API"
 const val TAG_RESULT_API = "RESULT_API"
 
-class Repository private constructor() {
+class WeatherRepository private constructor() {
 
     companion object {
-        private var INSTANCE: Repository? = null
-        fun getInstance(): Repository {
+        private var INSTANCE: WeatherRepository? = null
+        fun getInstance(): WeatherRepository {
             if (INSTANCE == null) {
-                INSTANCE = Repository()
+                INSTANCE = WeatherRepository()
             }
-            return INSTANCE ?: throw IllegalStateException("Repository не инициализирован.")
+            return INSTANCE ?: throw IllegalStateException("WeatherRepository не инициализирован.")
         }
-    }
-
-    private val myCoroutineScope = CoroutineScope(Dispatchers.Main)
-
-    fun onDestroy() {
-        myCoroutineScope.cancel()
     }
 
     private var weatherApi = RetrofitClient.weatherApiService

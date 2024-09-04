@@ -2,6 +2,7 @@ package com.example.weatherapp
 
 import android.app.Application
 import android.content.Context
+import com.example.weatherapp.repositories.WeatherRepository
 
 class App : Application() {
 
@@ -21,9 +22,9 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Repository.getInstance().fetchWeather()
+        WeatherRepository.getInstance().fetchWeather()
 
-        Repository.getInstance().fetchLocations("Berlin")
+        WeatherRepository.getInstance().fetchLocations("Berlin")
     }
 
 }
