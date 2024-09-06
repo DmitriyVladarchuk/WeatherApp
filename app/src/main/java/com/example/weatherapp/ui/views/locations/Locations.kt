@@ -86,7 +86,6 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
             )
 
             saveLocations?.let { BodySaveLocations(it) }
-            Log.d("test", saveLocations?.size.toString())
         }
     }
 }
@@ -163,7 +162,7 @@ fun BodySaveLocations(locations: List<Location>) {
             ItemSaveLocation(
                 city = item.name,
                 admin = item.admin1,
-                country = item.country
+                country = item.country!!
             )
         }
     }
@@ -254,10 +253,11 @@ fun BodySearchLocations(locations: List<Location>, clickableSaveItem: (Location)
             .fillMaxSize()
     ) {
         items(locations) { item ->
-            ItemSearchLocations(
-                location = item,
-                clickableSaveItem = { clickableSaveItem(item) }
-            )
+            if (item.country != null)
+                ItemSearchLocations(
+                    location = item,
+                    clickableSaveItem = { clickableSaveItem(item) }
+                )
         }
     }
 }
@@ -274,7 +274,7 @@ fun ItemSearchLocations(location: Location, clickableSaveItem: (Location) -> Uni
         )
 
         Text(
-            text = if (location.admin1 == null) location.country else "${location.admin1}, ${location.country}",
+            text = if (location.admin1 == null) location.country!! else "${location.admin1}, ${location.country}",
             style = Typography.bodyMedium,
             color = colorResource(id = R.color.translucent),
             fontSize = 16.sp,

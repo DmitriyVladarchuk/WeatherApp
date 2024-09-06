@@ -9,7 +9,7 @@ import com.example.weatherapp.model.Location
 
 @Database(
     entities = [Location::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class LocalDB: RoomDatabase() {

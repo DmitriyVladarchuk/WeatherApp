@@ -8,6 +8,6 @@ data class Location(
     @PrimaryKey val name: String,
     val latitude: Float,
     val longitude: Float,
-    val country: String,
+    val country: String?,
     val admin1: String?
 )
