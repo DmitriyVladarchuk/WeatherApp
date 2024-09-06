@@ -2,6 +2,8 @@ package com.example.weatherapp
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
+import com.example.weatherapp.repositories.DataBaseRepository
 import com.example.weatherapp.repositories.WeatherRepository
 
 class App : Application() {
@@ -23,8 +25,7 @@ class App : Application() {
         super.onCreate()
 
         WeatherRepository.getInstance().fetchWeather()
-
-        //WeatherRepository.getInstance().fetchLocations("Berlin")
+        Log.d("test", DataBaseRepository.getInstance().locations.value?.size.toString())
     }
 
 }

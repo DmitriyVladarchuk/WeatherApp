@@ -1,13 +1,18 @@
 package com.example.weatherapp.ui.views.locations
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,6 +36,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.weatherapp.R
@@ -44,24 +50,58 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
     var stateSearchHeader by remember { mutableStateOf(false) }
     val apiCityList by viewModel.returnApi.observeAsState(mutableListOf())
 
+    val saveLocations by viewModel.saveLocations.observeAsState(mutableListOf())
+
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .padding(WindowInsets.ime.asPaddingValues())
     ) {
 
         if (stateSearchHeader) {
             SearchHeader(
-                clickableBack = { navController.popBackStack() },
-                search = { city -> viewModel.searchLocations(city) }
+                clickableBack = {
+                    navController.popBackStack()
+                    viewModel.clearLocations()
+                },
+                search = { city -> viewModel.searchLocations(city) },
+                clear = { viewModel.clearLocations() }
             )
 
-            //if (inSync != null) BodySearchLocations(locations = inSync)
-            apiCityList?.let { BodySearchLocations(locations = it) }
-        }
-        else
+            if (apiCityList != null && apiCityList.isNotEmpty()) {
+                BodySearchLocations(locations = apiCityList)  { location ->
+                    viewModel.saveLocation(location)
+                }
+            } else {
+                EmptyCityMessage()
+            }
+
+        } else {
             HeaderLocations(
-                clickableBack = { navController.popBackStack() },
+                clickableBack = {
+                    navController.popBackStack()
+                    viewModel.clearLocations()
+                },
                 clickableSearchLocation = { stateSearchHeader = !stateSearchHeader }
             )
+
+            saveLocations?.let { BodySaveLocations(it) }
+            Log.d("test", saveLocations?.size.toString())
+        }
+    }
+}
+
+@Composable
+fun EmptyCityMessage() {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = stringResource(id = R.string.enter_location_prompt),
+            style = Typography.titleLarge,
+            color = colorResource(id = R.color.translucent),
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 }
 
@@ -114,11 +154,52 @@ fun HeaderLocations(clickableBack: () -> Unit, clickableSearchLocation: () -> Un
 
 @Composable
 fun BodySaveLocations(locations: List<Location>) {
-
+    LazyColumn(
+        modifier = Modifier
+            .padding(top = 10.dp, start = 30.dp, end = 30.dp)
+            .fillMaxSize()
+    ) {
+        items(locations) { item ->
+            ItemSaveLocation(
+                city = item.name,
+                admin = item.admin1,
+                country = item.country
+            )
+        }
+    }
 }
 
 @Composable
-fun SearchHeader(clickableBack: () -> Unit, search: (String) -> Unit) {
+fun ItemSaveLocation(city: String, admin: String? ,country: String) {
+
+    //TODO Исправить
+
+    Column {
+        Text(
+            text = city,
+            style = Typography.bodyMedium,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        Text(
+            text = if (admin == null) country else "$admin, $country",
+            style = Typography.bodyMedium,
+            color = colorResource(id = R.color.translucent),
+            fontSize = 16.sp,
+            modifier = Modifier.padding(bottom = 10.dp),
+        )
+
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp)
+            .height(1.dp)
+            .background(colorResource(id = R.color.translucent))
+        )
+    }
+}
+
+@Composable
+fun SearchHeader(clickableBack: () -> Unit, search: (String) -> Unit, clear: () -> Unit) {
     var searchCity by remember{ mutableStateOf("") }
 
     Row(
@@ -157,6 +238,8 @@ fun SearchHeader(clickableBack: () -> Unit, search: (String) -> Unit) {
                 .size(24.dp)
                 .clickable {
                     searchCity = ""
+
+                    clear()
                 },
             contentDescription = "Cancel"
         )
@@ -164,31 +247,45 @@ fun SearchHeader(clickableBack: () -> Unit, search: (String) -> Unit) {
 }
 
 @Composable
-fun BodySearchLocations(locations: List<Location>) {
+fun BodySearchLocations(locations: List<Location>, clickableSaveItem: (Location) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .padding(top = 10.dp, start = 30.dp, end = 30.dp)
             .fillMaxSize()
     ) {
         items(locations) { item ->
-            ItemSearchLocations(city = item.name)
+            ItemSearchLocations(
+                location = item,
+                clickableSaveItem = { clickableSaveItem(item) }
+            )
         }
     }
 }
 
 @Composable
-fun ItemSearchLocations(city: String) {
-    Column {
+fun ItemSearchLocations(location: Location, clickableSaveItem: (Location) -> Unit) {
+    Column(
+        modifier = Modifier.clickable { clickableSaveItem(location) }
+    ) {
         Text(
-            text = city,
+            text = location.name,
             style = Typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 6.dp)
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        Text(
+            text = if (location.admin1 == null) location.country else "${location.admin1}, ${location.country}",
+            style = Typography.bodyMedium,
+            color = colorResource(id = R.color.translucent),
+            fontSize = 16.sp,
+            modifier = Modifier.padding(bottom = 10.dp),
         )
 
         Spacer(modifier = Modifier
             .fillMaxWidth()
+            .padding(bottom = 10.dp)
             .height(1.dp)
-            .background(colorResource(id = R.color.content))
+            .background(colorResource(id = R.color.translucent))
         )
     }
 }

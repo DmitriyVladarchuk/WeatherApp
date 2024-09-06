@@ -23,7 +23,7 @@ class DataBaseRepository private constructor() {
         }
     }
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     fun onDestroy() {
         coroutineScope.cancel()

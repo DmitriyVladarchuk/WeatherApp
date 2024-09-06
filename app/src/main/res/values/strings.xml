@@ -18,5 +18,6 @@
     <string name="select_city">Select City</string>
 
     <string name="error">Error</string>
+    <string name="enter_location_prompt">Enter the name of the location</string>
 
 </resources>
