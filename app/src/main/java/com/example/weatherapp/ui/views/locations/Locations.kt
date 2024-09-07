@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -49,6 +50,7 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
 
     var stateSearchHeader by remember { mutableStateOf(false) }
     val apiCityList by viewModel.returnApi.observeAsState(mutableListOf())
+    val forecastSavedLocations by viewModel.forecastSavedLocations.observeAsState(mutableListOf())
 
     val saveLocations by viewModel.saveLocations.observeAsState(mutableListOf())
 
@@ -85,6 +87,12 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
                 },
                 clickableSearchLocation = { stateSearchHeader = !stateSearchHeader }
             )
+
+//            saveLocations?.let {
+//                BodySaveLocations(it) { location ->
+//                    viewModel.updateLocation(location)
+//                }
+//            }
 
             saveLocations?.let {
                 BodySaveLocations(it) { location ->
@@ -180,11 +188,19 @@ fun BodySaveLocations(locations: List<Location>, clickableChangeItem: (Location)
             .padding(top = 10.dp, start = 30.dp, end = 30.dp)
             .fillMaxSize()
     ) {
-        items(locations) { item ->
+        itemsIndexed(locations) { index, item ->
             ItemSaveLocation(
                 location = item,
                 clickableChangeItem = { clickableChangeItem(item) }
             )
+
+            if (index != locations.lastIndex)
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp)
+                    .height(1.dp)
+                    .background(colorResource(id = R.color.translucent))
+                )
         }
     }
 }
@@ -195,7 +211,9 @@ fun ItemSaveLocation(location: Location, clickableChangeItem: (Location) -> Unit
     //TODO Исправить
 
     Column(
-        modifier = Modifier.clickable { clickableChangeItem(location) }
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { clickableChangeItem(location) }
     ) {
         Text(
             text = location.name,
@@ -211,12 +229,6 @@ fun ItemSaveLocation(location: Location, clickableChangeItem: (Location) -> Unit
             modifier = Modifier.padding(bottom = 10.dp),
         )
 
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 10.dp)
-            .height(1.dp)
-            .background(colorResource(id = R.color.translucent))
-        )
     }
 }
 
@@ -275,12 +287,21 @@ fun BodySearchLocations(locations: List<Location>, clickableSaveItem: (Location)
             .padding(top = 10.dp, start = 30.dp, end = 30.dp)
             .fillMaxSize()
     ) {
-        items(locations) { item ->
-            if (item.country != null)
+        itemsIndexed(locations) { index, item ->
+            if (item.country != null) {
                 ItemSearchLocations(
                     location = item,
                     clickableSaveItem = { clickableSaveItem(item) }
                 )
+
+                if (index != locations.lastIndex)
+                    Spacer(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp)
+                        .height(1.dp)
+                        .background(colorResource(id = R.color.translucent))
+                    )
+            }
         }
     }
 }
@@ -288,7 +309,9 @@ fun BodySearchLocations(locations: List<Location>, clickableSaveItem: (Location)
 @Composable
 fun ItemSearchLocations(location: Location, clickableSaveItem: (Location) -> Unit) {
     Column(
-        modifier = Modifier.clickable { clickableSaveItem(location) }
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { clickableSaveItem(location) }
     ) {
         Text(
             text = location.name,
@@ -304,11 +327,5 @@ fun ItemSearchLocations(location: Location, clickableSaveItem: (Location) -> Uni
             modifier = Modifier.padding(bottom = 10.dp),
         )
 
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 10.dp)
-            .height(1.dp)
-            .background(colorResource(id = R.color.translucent))
-        )
     }
 }

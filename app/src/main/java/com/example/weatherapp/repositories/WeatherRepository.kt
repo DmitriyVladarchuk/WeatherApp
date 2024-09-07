@@ -38,6 +38,8 @@ class WeatherRepository private constructor() {
     val locations: MutableLiveData<List<Location>> = MutableLiveData()
 
     val currentLocation: LiveData<Location> = DataBaseRepository.getInstance().currentLocation
+    val forecastSavedLocations: MutableLiveData<List<Forecast>> = MutableLiveData()
+    private val saveLocations: LiveData<List<Location>> = DataBaseRepository.getInstance().locations
 
     init {
         currentLocation.observeForever { location ->
@@ -45,11 +47,21 @@ class WeatherRepository private constructor() {
                 fetchWeatherForLocation(it)
             }
         }
+
+        saveLocations.observeForever { locations ->
+            locations.let {
+                forecastSavedLocations.value = fetchWeatherForSaveLocations(saveLocations.value!!)
+            }
+        }
     }
 
     fun fetchWeather() {
         currentLocation.value?.let {
             fetchWeatherForLocation(it)
+        }
+
+        saveLocations.value?.let {
+            forecastSavedLocations.value = fetchWeatherForSaveLocations(saveLocations.value!!)
         }
     }
 
@@ -77,6 +89,31 @@ class WeatherRepository private constructor() {
                 Log.d(TAG_API, "Ошибка: ${t.message}")
             }
         })
+    }
+
+    private fun fetchWeatherForSaveLocations(locations: List<Location>): List<Forecast> {
+        val list: MutableList<Forecast> = mutableListOf()
+
+        locations.forEach { item ->
+            val call = weatherApi.getForecast(item.latitude, item.longitude)
+
+            call.enqueue(object : Callback<Forecast> {
+                override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
+                    if (response.isSuccessful) {
+                        list.add(response.body()!!)
+                    } else {
+                        Log.d(TAG_API, "Ошибка: ${response.code()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<Forecast>, t: Throwable) {
+                    Log.d(TAG_API, "Ошибка: ${t.message}")
+                }
+
+            })
+        }
+
+        return list
     }
 
     fun fetchLocations(name: String) {

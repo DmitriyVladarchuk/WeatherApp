@@ -12,6 +12,7 @@ class LocationsViewModel : ViewModel() {
 
     val saveLocations = localDBRepository.locations
     val returnApi = apiRepository.locations
+    val forecastSavedLocations = apiRepository.forecastSavedLocations
 
     fun searchLocations(inputText: String) {
         apiRepository.fetchLocations(inputText)
