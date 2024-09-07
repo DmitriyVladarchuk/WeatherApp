@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,11 +42,13 @@ import com.example.weatherapp.ui.theme.Typography
 @Composable
 fun Main(navController: NavController, modifier: Modifier = Modifier, viewModel: HomeViewModel = viewModel()) {
 
+    val currentLocation by viewModel.currentLocation.observeAsState()
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         Header(
-            currentLocation = viewModel.currentLocation,
+            currentLocation = currentLocation?.name ?: "N/A",
             clickableLocations = { navController.navigate(Routes.Locations.route) },
             clickableSettings = { navController.navigate(Routes.Settings.route) }
         )

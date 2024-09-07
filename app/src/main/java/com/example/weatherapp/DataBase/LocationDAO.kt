@@ -15,6 +15,9 @@ interface LocationDAO {
     @Query("SELECT * FROM locations")
     fun getLocations(): Flow<List<Location>>
 
+    @Query("SELECT * FROM locations WHERE isSelected = 1")
+    fun getSelectedLocations(): Flow<Location>
+
     @Insert(entity = Location::class)
     fun saveLocation(location: Location)
 

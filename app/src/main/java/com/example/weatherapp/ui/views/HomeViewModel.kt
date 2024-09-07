@@ -6,17 +6,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.repositories.WeatherRepository
 import com.example.weatherapp.model.Daily
 import com.example.weatherapp.model.Forecast
+import com.example.weatherapp.model.Location
 import com.example.weatherapp.model.WeatherPeriod
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class HomeViewModel : ViewModel() {
 
-    val currentLocation by mutableStateOf("Краснодар")
+    val currentLocation: LiveData<Location> = WeatherRepository.getInstance().currentLocation
 
     val inSync: LiveData<Boolean> = WeatherRepository.getInstance().inSync
 

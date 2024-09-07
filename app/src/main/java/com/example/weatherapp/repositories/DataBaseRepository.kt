@@ -34,6 +34,7 @@ class DataBaseRepository private constructor() {
     }
 
     val locations: LiveData<List<Location>> = localDB.getLocations().asLiveData()
+    val currentLocation: LiveData<Location> = localDB.getSelectedLocations().asLiveData()
 
     fun addLocation(location: Location) {
         coroutineScope.launch {

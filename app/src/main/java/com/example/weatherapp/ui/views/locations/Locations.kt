@@ -71,6 +71,7 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
             if (apiCityList != null && apiCityList.isNotEmpty()) {
                 BodySearchLocations(locations = apiCityList)  { location ->
                     viewModel.saveLocation(location)
+                    navController.popBackStack()
                 }
             } else {
                 EmptyCityMessage()

@@ -1,6 +1,7 @@
 package com.example.weatherapp.repositories
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.weatherapp.API.GeocodingResponse
 import com.example.weatherapp.API.RetrofitClient
@@ -36,14 +37,24 @@ class WeatherRepository private constructor() {
     val forecastWeather: MutableLiveData<Forecast> = MutableLiveData()
     val locations: MutableLiveData<List<Location>> = MutableLiveData()
 
+    val currentLocation: LiveData<Location> = DataBaseRepository.getInstance().currentLocation
 
-    fun fetchWeather() {
-        //getCurrentWeather()
-        getWeather()
+    init {
+        currentLocation.observeForever { location ->
+            location?.let {
+                fetchWeatherForLocation(it)
+            }
+        }
     }
 
-    private fun getWeather() {
-        val call = weatherApi.getForecast(45.0448f, 38.976f)
+    fun fetchWeather() {
+        currentLocation.value?.let {
+            fetchWeatherForLocation(it)
+        }
+    }
+
+    private fun fetchWeatherForLocation(location: Location) {
+        val call = weatherApi.getForecast(location.latitude, location.longitude)
 
         call.enqueue(object : Callback<Forecast> {
             override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
@@ -56,14 +67,14 @@ class WeatherRepository private constructor() {
                 } else {
                     inSync.value = false
 
-                    Log.d(TAG_API,"Ошибка: ${response.code()}")
+                    Log.d(TAG_API, "Ошибка: ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<Forecast>, t: Throwable) {
                 inSync.value = false
 
-                Log.d(TAG_API,"Ошибка: ${t.message}")
+                Log.d(TAG_API, "Ошибка: ${t.message}")
             }
         })
     }
