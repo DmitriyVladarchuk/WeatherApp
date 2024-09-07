@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.example.weatherapp.model.Location
 import kotlinx.coroutines.flow.Flow
@@ -25,5 +26,14 @@ interface LocationDAO {
 
     @Query("DELETE FROM locations")
     fun deleteAllLocations()
+
+    @Query("UPDATE locations SET isSelected = 0 WHERE isSelected = 1")
+    fun resetSelectedLocation()
+
+    @Transaction
+    fun selectLocation(newSelectedLocation: Location) {
+        resetSelectedLocation()
+        updateLocation(newSelectedLocation.copy(isSelected = true))
+    }
 
 }

@@ -25,4 +25,8 @@ class LocationsViewModel : ViewModel() {
         localDBRepository.addLocation(newLocation)
     }
 
+    fun updateLocation(location: Location) {
+        localDBRepository.editLocation(location)
+    }
+
 }

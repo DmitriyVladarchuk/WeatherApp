@@ -38,12 +38,16 @@ class DataBaseRepository private constructor() {
     fun addLocation(location: Location) {
         coroutineScope.launch {
             localDB.saveLocation(location)
+
+            localDB.selectLocation(location)
         }
     }
 
     fun editLocation(location: Location) {
         coroutineScope.launch {
             localDB.updateLocation(location)
+
+            localDB.selectLocation(location)
         }
     }
 

@@ -9,5 +9,6 @@ data class Location(
     val latitude: Float,
     val longitude: Float,
     val country: String?,
-    val admin1: String?
+    val admin1: String?,
+    val isSelected: Boolean = false
 )

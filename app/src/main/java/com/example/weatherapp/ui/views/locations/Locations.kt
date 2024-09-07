@@ -85,7 +85,11 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
                 clickableSearchLocation = { stateSearchHeader = !stateSearchHeader }
             )
 
-            saveLocations?.let { BodySaveLocations(it) }
+            saveLocations?.let {
+                BodySaveLocations(it) { location ->
+                    viewModel.updateLocation(location)
+                }
+            }
         }
     }
 }
@@ -152,7 +156,24 @@ fun HeaderLocations(clickableBack: () -> Unit, clickableSearchLocation: () -> Un
 }
 
 @Composable
-fun BodySaveLocations(locations: List<Location>) {
+fun BodySaveLocations(locations: List<Location>, clickableChangeItem: (Location) -> Unit) {
+
+    Box(modifier = Modifier.padding(top = 20.dp, start = 30.dp, end = 30.dp)) {
+        locations.forEach { item ->
+            if (item.isSelected)
+                ItemSaveLocation(location = item, clickableChangeItem = {})
+        }
+    }
+    
+    if (locations.isNotEmpty()) {
+        Text(
+            text = stringResource(id = R.string.other_places),
+            style = Typography.bodyMedium,
+            color = colorResource(id = R.color.translucent),
+            modifier = Modifier.padding(start = 30.dp, top = 10.dp, end = 30.dp, bottom = 10.dp)
+        )
+    }
+
     LazyColumn(
         modifier = Modifier
             .padding(top = 10.dp, start = 30.dp, end = 30.dp)
@@ -160,28 +181,29 @@ fun BodySaveLocations(locations: List<Location>) {
     ) {
         items(locations) { item ->
             ItemSaveLocation(
-                city = item.name,
-                admin = item.admin1,
-                country = item.country!!
+                location = item,
+                clickableChangeItem = { clickableChangeItem(item) }
             )
         }
     }
 }
 
 @Composable
-fun ItemSaveLocation(city: String, admin: String? ,country: String) {
+fun ItemSaveLocation(location: Location, clickableChangeItem: (Location) -> Unit) {
 
     //TODO Исправить
 
-    Column {
+    Column(
+        modifier = Modifier.clickable { clickableChangeItem(location) }
+    ) {
         Text(
-            text = city,
+            text = location.name,
             style = Typography.bodyMedium,
             modifier = Modifier.padding(bottom = 4.dp)
         )
 
         Text(
-            text = if (admin == null) country else "$admin, $country",
+            text = if (location.admin1 == null) location.country!! else "${location.admin1}, ${location.country}",
             style = Typography.bodyMedium,
             color = colorResource(id = R.color.translucent),
             fontSize = 16.sp,
