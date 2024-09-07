@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="weather_clear_sky">Чистое небо</string>
+    <string name="weather_mainly_clear">В основном ясно</string>
+    <string name="weather_variable_cloudiness">Переменная облачность</string>
+    <string name="weather_overcast">Пасмурно</string>
+    <string name="weather_fog">Туман</string>
+    <string name="weather_hoarfrost">Отложение инея</string>
+    <string name="weather_light_drizzle">Мелкий дождь</string>
+    <string name="weather_light_drizzle_alternative">Мелкий дождь</string>
+    <string name="weather_light_drizzle_another">Мелкий дождь</string>
+    <string name="weather_drizzle">Моросящий дождь</string>
+    <string name="weather_drizzle_alternative">Моросящий дождь</string>
+    <string name="weather_rain">Дождь</string>
+    <string name="weather_rain_alternative">Дождь</string>
+    <string name="weather_cold_rain">Холодный дождь</string>
+    <string name="weather_cold_rain_alternative">Холодный дождь</string>
+    <string name="weather_light_snow">Слабый снег</string>
+    <string name="weather_moderate_snow">Умеренный снег</string>
+    <string name="weather_heavy_snow">Сильный снег</string>
+    <string name="weather_snow">Снег</string>
+    <string name="weather_light_thunderstorm_rain">Слабый ливневый дождь</string>
+    <string name="weather_moderate_thunderstorm_rain">Умеренный ливневый дождь</string>
+    <string name="weather_heavy_thunderstorm_rain">Сильный ливневый дождь</string>
+    <string name="weather_light_snowfall">Небольшой снегопад</string>
+    <string name="weather_heavy_snowfall">Обильный снегопад</string>
+    <string name="weather_thunderstorm">Гроза</string>
+    <string name="weather_thunderstorm_with_hail">Гроза с градом</string>
+    <string name="weather_thunderstorm_with_heavy_hail">Гроза с сильным градом</string>
+
+</resources>

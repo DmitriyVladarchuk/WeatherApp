@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+
+    <string name="current_location">Текущее местоположение</string>
+    <string name="in_sync">синхронизировано</string>
+    <string name="not_sync">не синхронизировано</string>
+
+    <string name="details">Подробно</string>
+    <string name="forecast">Прогноз</string>
+    <string name="precipitation">Осадок</string>
+    <string name="se_wind">Южный ветер</string>
+    <string name="humidity">Влажность</string>
+    <string name="pressure">Давление</string>
+
+    <string name="hourly_forecast">Почасовой прогноз</string>
+    <string name="daily_forecast">Ежедневный прогноз</string>
+
+    <string name="select_city">Выберите город</string>
+
+    <string name="error">Ошибка</string>
+    <string name="enter_location_prompt">Введите название местоположения</string>
+    <string name="other_places">Другие места</string>
+
+</resources>
