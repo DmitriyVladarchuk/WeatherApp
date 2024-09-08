@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import com.example.weatherapp.repositories.DataBaseRepository
+import com.example.weatherapp.repositories.SettingsRepository
 import com.example.weatherapp.repositories.WeatherRepository
 
 class App : Application() {
@@ -24,8 +25,9 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        SettingsRepository.getInstance().setTheme()
+        //SettingsRepository.getInstance().changeDarkMode()
         WeatherRepository.getInstance().fetchWeather()
-        Log.d("test", DataBaseRepository.getInstance().locations.value?.size.toString())
     }
 
 }
