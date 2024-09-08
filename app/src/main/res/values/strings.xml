@@ -16,6 +16,26 @@
     <string name="daily_forecast">Daily Forecast</string>
 
     <string name="select_city">Select City</string>
+    <string name="settings">Settings</string>
+    <string name="theme">Theme</string>
+    <string name="dark_mode">Dark Theme</string>
+    <string name="light_mode">Light Theme</string>
+    <string name="description_dark_mode">Join the Dark Side!</string>
+    <string name="description_light_mode">Let There be Light!</string>
+
+    <string name="feedback">Feedback</string>
+    <string name="report_an_issue">Report an Issue</string>
+    <string name="report_description">Facing an issue? Report and we’ll look into it</string>
+
+    <string name="feedback_title_message">Choose an email client</string>
+
+    <string name="common">Common</string>
+
+    <string name="about_app">About the app</string>
+    <string name="about_description">Read a bit more about the app</string>
+
+    <string name="github" translatable="false">GitHub</string>
+    <string name="github_description">Here you can view the source code</string>
 
     <string name="error">Error</string>
     <string name="enter_location_prompt">Enter the name of the location</string>

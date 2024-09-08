@@ -47,9 +47,6 @@ class WeatherRepository private constructor() {
         }
 
         saveLocations.observeForever { locations ->
-//            locations.let {
-//                forecastSavedLocations.value = fetchWeatherForSaveLocations(saveLocations.value!!)
-//            }
             if (locations != null)
                 forecastSavedLocations.postValue(fetchWeatherForSaveLocations(saveLocations.value!!))
         }

@@ -16,6 +16,24 @@
     <string name="daily_forecast">Ежедневный прогноз</string>
 
     <string name="select_city">Выберите город</string>
+    <string name="settings">Настройки</string>
+    <string name="theme">Тема</string>
+    <string name="dark_mode">Темная Тема</string>
+    <string name="light_mode">Светлая Тема</string>
+    <string name="description_dark_mode">Стань на Темную Сторону!</string>
+    <string name="description_light_mode">Включи Свет!</string>
+
+    <string name="feedback">Обратная связь</string>
+    <string name="report_an_issue">Сообщить о проблеме</string>
+    <string name="report_description">Столкнулись с проблемой? Сообщите, и мы ее рассмотрим</string>
+
+    <string name="feedback_title_message">Выберите почтовый клиент</string>
+
+    <string name="common">Общие</string>
+    <string name="about_app">О приложении</string>
+    <string name="about_description">Узнайте немного больше об этом приложении</string>
+
+    <string name="github_description">Тут можно посмотреть исходный код</string>
 
     <string name="error">Ошибка</string>
     <string name="enter_location_prompt">Введите название местоположения</string>

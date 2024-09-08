@@ -26,7 +26,6 @@ class App : Application() {
         super.onCreate()
 
         SettingsRepository.getInstance().setTheme()
-        //SettingsRepository.getInstance().changeDarkMode()
         WeatherRepository.getInstance().fetchWeather()
     }
 
