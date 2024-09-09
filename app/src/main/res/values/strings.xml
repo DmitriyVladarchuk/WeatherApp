@@ -34,6 +34,9 @@
     <string name="about_app">About the app</string>
     <string name="about_description">Read a bit more about the app</string>
 
+    <string name="info">Info</string>
+    <string name="delete">Delete</string>
+
     <string name="github" translatable="false">GitHub</string>
     <string name="github_description">Here you can view the source code</string>
 

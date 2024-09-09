@@ -2,6 +2,7 @@ package com.example.weatherapp.ui.views.locations
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,8 +18,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,6 +36,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
@@ -52,12 +57,18 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Locations(navController: NavController, modifier: Modifier = Modifier, viewModel: LocationsViewModel = viewModel()) {
 
     var stateSearchHeader by remember { mutableStateOf(false) }
     val apiCityList by viewModel.returnApi.observeAsState(mutableListOf())
     val forecastSavedLocations: List<ForecastSaveLocation> by viewModel.forecastSavedLocations.observeAsState(mutableListOf<ForecastSaveLocation>())
+
+    val sheetState = rememberModalBottomSheetState()
+    var isSheetOpen by remember {
+        mutableStateOf(false)
+    }
 
     Column(
         modifier = modifier
@@ -79,6 +90,7 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
                 BodySearchLocations(locations = apiCityList)  { location ->
                     viewModel.saveLocation(location)
                     navController.popBackStack()
+                    viewModel.clearLocations()
                 }
             } else {
                 EmptyCityMessage()
@@ -94,12 +106,34 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
             )
 
             forecastSavedLocations?.let {
-                BodySaveLocations(it) {
-                    viewModel.updateLocation(it.location)
-                    navController.popBackStack()
-                }
+                BodySaveLocations(
+                    locations = it,
+                    clickableChangeItem = {
+                        //viewModel.updateLocation(it.location)
+                        //navController.popBackStack()
+                    },
+                    longPress = { location ->
+                        isSheetOpen = true
+                    }
+                )
             }
 
+        }
+    }
+    
+    if (isSheetOpen) {
+        ModalBottomSheet(sheetState = sheetState, onDismissRequest = { isSheetOpen = false }, containerColor = colorResource(id = R.color.main)) {
+            Column(
+                modifier = Modifier.padding(bottom = 40.dp)
+            ) {
+                BottomSheetItem(iconRes = R.drawable.add, text = stringResource(id = R.string.info)) {
+
+                }
+
+                BottomSheetItem(iconRes = R.drawable.close, text = stringResource(id = R.string.delete), colorRes = R.color.red) {
+
+                }
+            }
         }
     }
 }
@@ -166,12 +200,12 @@ fun HeaderLocations(clickableBack: () -> Unit, clickableSearchLocation: () -> Un
 }
 
 @Composable
-fun BodySaveLocations(locations: List<ForecastSaveLocation>, clickableChangeItem: (ForecastSaveLocation) -> Unit) {
+fun BodySaveLocations(locations: List<ForecastSaveLocation>, clickableChangeItem: (ForecastSaveLocation) -> Unit, longPress: (Location) -> Unit) {
 
     Box(modifier = Modifier.padding(top = 30.dp, start = 30.dp, end = 30.dp)) {
         locations.forEach { item ->
             if (item.location.isSelected)
-                ItemSaveLocation(item = item, clickableChangeItem = {})
+                ItemSaveLocation(item = item, clickableChangeItem = {}, longPress = {})
         }
     }
 
@@ -192,7 +226,8 @@ fun BodySaveLocations(locations: List<ForecastSaveLocation>, clickableChangeItem
         itemsIndexed(locations) { index, item ->
             ItemSaveLocation(
                 item = item,
-                clickableChangeItem = { clickableChangeItem(item) }
+                clickableChangeItem = { clickableChangeItem(item) },
+                longPress = { longPress(item.location) }
             )
 
             if (index != locations.lastIndex)
@@ -207,13 +242,20 @@ fun BodySaveLocations(locations: List<ForecastSaveLocation>, clickableChangeItem
 }
 
 @Composable
-fun ItemSaveLocation(item: ForecastSaveLocation, clickableChangeItem: (ForecastSaveLocation) -> Unit) {
+fun ItemSaveLocation(item: ForecastSaveLocation, clickableChangeItem: (ForecastSaveLocation) -> Unit, longPress: (Location) -> Unit) {
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 10.dp)
-            .clickable { clickableChangeItem(item) }
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = { clickableChangeItem(item) },
+                    onDoubleTap = { longPress(item.location) },
+                    onLongPress = { longPress(item.location) },
+                    onTap = { /* обработка простого касания */ }
+                )
+            }
     ) {
 
         Column {
@@ -243,7 +285,9 @@ fun ItemSaveLocation(item: ForecastSaveLocation, clickableChangeItem: (ForecastS
         Icon(
             imageVector = ImageVector.vectorResource(id = getIconResourceId(item.currentWeather.weatherCode ?: 0)),
             contentDescription = "",
-            modifier = Modifier.size(40.dp).align(Alignment.CenterVertically)
+            modifier = Modifier
+                .size(40.dp)
+                .align(Alignment.CenterVertically)
         )
 
     }
@@ -351,5 +395,31 @@ fun ItemSearchLocations(location: Location, clickableSaveItem: (Location) -> Uni
             modifier = Modifier.padding(bottom = 10.dp),
         )
 
+    }
+}
+
+@Composable
+fun BottomSheetItem(iconRes: Int, text: String, colorRes: Int = R.color.content, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 30.dp, top = 10.dp, end = 30.dp)
+            .clickable { onClick() }
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(id = iconRes),
+            tint = colorResource(id = colorRes),
+            modifier = Modifier
+                .padding(end = 20.dp)
+                .size(32.dp),
+            contentDescription = null
+        )
+        
+        Text(
+            text = text,
+            style = Typography.bodyMedium,
+            fontSize = 24.sp,
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
     }
 }

@@ -35,6 +35,9 @@
 
     <string name="github_description">Тут можно посмотреть исходный код</string>
 
+    <string name="info">Информация о локации</string>
+    <string name="delete">Удалить</string>
+
     <string name="error">Ошибка</string>
     <string name="enter_location_prompt">Введите название местоположения</string>
     <string name="other_places">Другие места</string>
