@@ -30,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.theme.Typography
+import com.example.weatherapp.ui.views.Routes
 
 
 @Composable
@@ -42,7 +43,7 @@ fun Settings(navController: NavController, modifier: Modifier = Modifier, viewMo
         .fillMaxSize()
         .padding(start = 30.dp, end = 30.dp)) {
 
-        HeaderSettings {
+        HeaderSettings(stringResource(id = R.string.settings)) {
             navController.popBackStack()
         }
         
@@ -81,7 +82,7 @@ fun Settings(navController: NavController, modifier: Modifier = Modifier, viewMo
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 30.dp),
-            clickableAbout = {  },
+            clickableAbout = { navController.navigate(Routes.AboutApp.route) },
             clickableGitHub = { openUrl(context, "https://github.com/DmitriyVladarchuk/WeatherApp") }
         )
 
@@ -89,7 +90,7 @@ fun Settings(navController: NavController, modifier: Modifier = Modifier, viewMo
 }
 
 @Composable
-fun HeaderSettings(clickableBack: () -> Unit) {
+fun HeaderSettings(text: String, clickableBack: () -> Unit) {
     Row(
         modifier = Modifier
             .padding(top = 20.dp, bottom = 30.dp)
@@ -105,7 +106,7 @@ fun HeaderSettings(clickableBack: () -> Unit) {
         )
 
         Text(
-            text = stringResource(id = R.string.settings),
+            text = text,
             style = Typography.bodyMedium,
             color = colorResource(id = R.color.translucent),
             modifier = Modifier.align(Alignment.CenterVertically)

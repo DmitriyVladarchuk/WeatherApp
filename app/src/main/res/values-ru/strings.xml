@@ -42,4 +42,8 @@
     <string name="enter_location_prompt">Введите название местоположения</string>
     <string name="other_places">Другие места</string>
 
+    <string name="about_app_description_one">WeatherApp — это приложение c открытым  исходным кодом для отслеживания погоды, которое предоставляет прогнозы и информацию о климате по всему миру с использованием метеорологического и геокодирующего API от сервиса «Open-Meteo».</string>
+
+    <string name="about_app_description_two">Вы можете ознакомиться с его кодом, внести улучшения и участвовать в развитии проекта. Оставайтесь в курсе погоды с WeatherApp!</string>
+
 </resources>

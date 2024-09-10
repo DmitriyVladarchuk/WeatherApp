@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.views
+package com.example.weatherapp.ui.views.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,12 +26,8 @@ import com.example.weatherapp.Utils.getIconResourceId
 import com.example.weatherapp.model.Daily
 import com.example.weatherapp.model.WeatherPeriod
 import com.example.weatherapp.ui.theme.Typography
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable

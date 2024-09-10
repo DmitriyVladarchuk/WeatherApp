@@ -1,7 +1,9 @@
 package com.example.weatherapp.ui.views.locations
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -109,8 +111,8 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
                 BodySaveLocations(
                     locations = it,
                     clickableChangeItem = {
-                        //viewModel.updateLocation(it.location)
-                        //navController.popBackStack()
+                        viewModel.updateLocation(it.location)
+                        navController.popBackStack()
                     },
                     longPress = { location ->
                         isSheetOpen = true
@@ -241,6 +243,7 @@ fun BodySaveLocations(locations: List<ForecastSaveLocation>, clickableChangeItem
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ItemSaveLocation(item: ForecastSaveLocation, clickableChangeItem: (ForecastSaveLocation) -> Unit, longPress: (Location) -> Unit) {
 
@@ -248,14 +251,10 @@ fun ItemSaveLocation(item: ForecastSaveLocation, clickableChangeItem: (ForecastS
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 10.dp)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = { clickableChangeItem(item) },
-                    onDoubleTap = { longPress(item.location) },
-                    onLongPress = { longPress(item.location) },
-                    onTap = { /* обработка простого касания */ }
-                )
-            }
+            .combinedClickable(
+                onClick = { clickableChangeItem(item) },
+                onLongClick = { longPress(item.location) }
+            )
     ) {
 
         Column {

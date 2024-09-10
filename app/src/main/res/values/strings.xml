@@ -44,4 +44,8 @@
     <string name="enter_location_prompt">Enter the name of the location</string>
     <string name="other_places">Other Places</string>
 
+    <string name="about_app_description_one">WeatherApp is an open source weather tracking application that provides forecasts and climate information around the world using the meteorological and geocoding API from the «Open—Meteo» service.</string>
+
+    <string name="about_app_description_two">You can familiarize yourself with its code, make improvements and participate in the development of the project. Stay up to date with the weather with WeatherApp!</string>
+
 </resources>

@@ -1,12 +1,10 @@
-package com.example.weatherapp.ui.views
+package com.example.weatherapp.ui.views.home
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.repositories.WeatherRepository
 import com.example.weatherapp.model.Daily
