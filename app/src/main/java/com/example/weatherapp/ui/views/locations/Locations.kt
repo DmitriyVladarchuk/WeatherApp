@@ -20,6 +20,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
@@ -67,6 +70,7 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
     val apiCityList by viewModel.returnApi.observeAsState(mutableListOf())
     val forecastSavedLocations: List<ForecastSaveLocation> by viewModel.forecastSavedLocations.observeAsState(mutableListOf<ForecastSaveLocation>())
 
+    var openDialog by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     var isSheetOpen by remember {
         mutableStateOf(false)
@@ -116,6 +120,8 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
                     },
                     longPress = { location ->
                         isSheetOpen = true
+
+                        viewModel.clickLocations = location
                     }
                 )
             }
@@ -128,14 +134,59 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
             Column(
                 modifier = Modifier.padding(bottom = 40.dp)
             ) {
-                BottomSheetItem(iconRes = R.drawable.add, text = stringResource(id = R.string.info)) {
-
+                BottomSheetItem(iconRes = R.drawable.info, text = stringResource(id = R.string.info)) {
+                    //isSheetOpen = false
                 }
 
-                BottomSheetItem(iconRes = R.drawable.close, text = stringResource(id = R.string.delete), colorRes = R.color.red) {
-
+                BottomSheetItem(iconRes = R.drawable.delete, text = stringResource(id = R.string.delete), colorRes = R.color.red) {
+                    openDialog = true
+                    //isSheetOpen = false
                 }
             }
+        }
+
+        if (openDialog) {
+            val buttonColors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.main), contentColor = colorResource(id = R.color.content))
+            AlertDialog(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.dialog_title),
+                        style = Typography.titleLarge
+                    )
+                },
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.dialog_body),
+                        style = Typography.bodyMedium
+                    )
+                },
+                containerColor = colorResource(id = R.color.main),
+                titleContentColor = colorResource(id = R.color.translucent),
+                textContentColor = colorResource(id = R.color.translucent),
+                onDismissRequest = {
+                    openDialog = false
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            openDialog = false
+                            viewModel.deleteLocation()
+                            isSheetOpen = false
+                        },
+                        colors = buttonColors) {
+                        Text(text = stringResource(id = R.string.delete), style = Typography.bodyMedium)
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            openDialog = false
+                            isSheetOpen = false
+                        }, colors = buttonColors) {
+                        Text(text = stringResource(id = R.string.cancel), style = Typography.bodyMedium)
+                    }
+                }
+            )
         }
     }
 }
@@ -421,4 +472,25 @@ fun BottomSheetItem(iconRes: Int, text: String, colorRes: Int = R.color.content,
             modifier = Modifier.align(Alignment.CenterVertically)
         )
     }
+}
+
+@Composable
+fun DialogDeleteLocation(location: Location, onClick: () -> Unit) {
+    //var openDialog by remember { mutableStateOf(false) }
+    AlertDialog(
+        onDismissRequest = {
+            //openDialog = false
+        },
+        confirmButton = {
+            Button(onClick = { onClick() }) {
+                Text(text = "Delete")
+            }
+        },
+        dismissButton = {
+            Button(onClick = { /*TODO*/ }) {
+                Text(text = "Cancel")
+            }
+        }
+    )
+
 }

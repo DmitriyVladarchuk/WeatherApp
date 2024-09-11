@@ -33,6 +33,7 @@ class LocationsViewModel : ViewModel() {
 
     fun deleteLocation() {
         localDBRepository.deleteLocation(clickLocations)
+        apiRepository.fetchWeather()
     }
 
 }
