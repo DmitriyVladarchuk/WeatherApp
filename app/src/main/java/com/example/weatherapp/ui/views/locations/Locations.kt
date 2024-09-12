@@ -58,6 +58,7 @@ import com.example.weatherapp.Utils.getIconResourceId
 import com.example.weatherapp.model.ForecastSaveLocation
 import com.example.weatherapp.model.Location
 import com.example.weatherapp.ui.theme.Typography
+import com.example.weatherapp.ui.views.Routes
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -66,9 +67,10 @@ import kotlin.math.roundToInt
 @Composable
 fun Locations(navController: NavController, modifier: Modifier = Modifier, viewModel: LocationsViewModel = viewModel()) {
 
-    var stateSearchHeader by remember { mutableStateOf(false) }
+    //var stateSearchHeader by remember { mutableStateOf(false) }
     val apiCityList by viewModel.returnApi.observeAsState(mutableListOf())
-    val forecastSavedLocations: List<ForecastSaveLocation> by viewModel.forecastSavedLocations.observeAsState(mutableListOf<ForecastSaveLocation>())
+    //val forecastSavedLocations: List<ForecastSaveLocation> by viewModel.forecastSavedLocations.observeAsState(mutableListOf<ForecastSaveLocation>())
+    val forecastSavedLocations: List<ForecastSaveLocation> by viewModel.forecastSavedLocations.observeAsState(emptyList())
 
     var openDialog by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
@@ -82,51 +84,32 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
             .padding(WindowInsets.ime.asPaddingValues())
     ) {
 
-        if (stateSearchHeader) {
-            SearchHeader(
-                clickableBack = {
-                    navController.popBackStack()
-                    viewModel.clearLocations()
-                },
-                search = { city -> viewModel.searchLocations(city) },
-                clear = { viewModel.clearLocations() }
-            )
+        HeaderLocations(
+            clickableBack = {
+                navController.popBackStack()
+                viewModel.clearLocations()
+            },
+            clickableSearchLocation = {
+                //stateSearchHeader = !stateSearchHeader
+                navController.navigate(Routes.LocationsSearch.route)
+            }
+        )
 
-            if (apiCityList != null && apiCityList.isNotEmpty()) {
-                BodySearchLocations(locations = apiCityList)  { location ->
-                    viewModel.saveLocation(location)
+        forecastSavedLocations?.let {
+            BodySaveLocations(
+                locations = it,
+                clickableChangeItem = {
+                    viewModel.updateLocation(it.location)
                     navController.popBackStack()
-                    viewModel.clearLocations()
+                },
+                longPress = { location ->
+                    isSheetOpen = true
+
+                    viewModel.clickLocations = location
                 }
-            } else {
-                EmptyCityMessage()
-            }
-
-        } else {
-            HeaderLocations(
-                clickableBack = {
-                    navController.popBackStack()
-                    viewModel.clearLocations()
-                },
-                clickableSearchLocation = { stateSearchHeader = !stateSearchHeader }
             )
-
-            forecastSavedLocations?.let {
-                BodySaveLocations(
-                    locations = it,
-                    clickableChangeItem = {
-                        viewModel.updateLocation(it.location)
-                        navController.popBackStack()
-                    },
-                    longPress = { location ->
-                        isSheetOpen = true
-
-                        viewModel.clickLocations = location
-                    }
-                )
-            }
-
         }
+
     }
     
     if (isSheetOpen) {
@@ -188,20 +171,6 @@ fun Locations(navController: NavController, modifier: Modifier = Modifier, viewM
                 }
             )
         }
-    }
-}
-
-@Composable
-fun EmptyCityMessage() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Text(
-            text = stringResource(id = R.string.enter_location_prompt),
-            style = Typography.titleLarge,
-            color = colorResource(id = R.color.translucent),
-            modifier = Modifier.align(Alignment.Center)
-        )
     }
 }
 
@@ -342,110 +311,6 @@ fun ItemSaveLocation(item: ForecastSaveLocation, clickableChangeItem: (ForecastS
 
     }
 
-}
-
-@Composable
-fun SearchHeader(clickableBack: () -> Unit, search: (String) -> Unit, clear: () -> Unit) {
-    var searchCity by remember{ mutableStateOf("") }
-
-    Row(
-        modifier = Modifier
-            .padding(top = 20.dp, start = 30.dp, end = 30.dp)
-            .fillMaxWidth()
-    ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.arrow_back),
-            tint = colorResource(id = R.color.translucent),
-            modifier = Modifier
-                .size(21.dp)
-                .clickable { clickableBack() },
-            contentDescription = "Back"
-        )
-
-        BasicTextField(
-            value = searchCity,
-            modifier = Modifier
-                .weight(1f)
-                .height(34.dp)
-                .padding(start = 6.dp, top = 0.dp, end = 6.dp)
-                .focusRequester(FocusRequester().also { focusRequester ->
-                    LaunchedEffect(Unit) {
-                        focusRequester.requestFocus()
-                    }
-                }),
-            textStyle = Typography.bodyMedium.copy(color = colorResource(id = R.color.content)),
-            cursorBrush = SolidColor(colorResource(id = R.color.translucent)),
-            onValueChange = { inputText ->
-                searchCity = inputText.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
-
-                search(inputText)
-            }
-        )
-
-        Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.close),
-            tint = colorResource(id = R.color.translucent),
-            modifier = Modifier
-                .size(24.dp)
-                .clickable {
-                    searchCity = ""
-
-                    clear()
-                },
-            contentDescription = "Cancel"
-        )
-    }
-
-}
-
-@Composable
-fun BodySearchLocations(locations: List<Location>, clickableSaveItem: (Location) -> Unit) {
-    LazyColumn(
-        modifier = Modifier
-            .padding(top = 10.dp, start = 30.dp, end = 30.dp)
-            .fillMaxSize()
-    ) {
-        itemsIndexed(locations) { index, item ->
-            if (item.country != null) {
-                ItemSearchLocations(
-                    location = item,
-                    clickableSaveItem = { clickableSaveItem(item) }
-                )
-
-                if (index != locations.lastIndex)
-                    Spacer(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp)
-                        .height(1.dp)
-                        .background(colorResource(id = R.color.translucent))
-                    )
-            }
-        }
-    }
-}
-
-@Composable
-fun ItemSearchLocations(location: Location, clickableSaveItem: (Location) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { clickableSaveItem(location) }
-    ) {
-        Text(
-            text = location.name,
-            style = Typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-
-        Text(
-            text = if (location.admin1 == null) location.country!! else "${location.admin1}, ${location.country}",
-            style = Typography.bodyMedium,
-            color = colorResource(id = R.color.translucent),
-            fontSize = 16.sp,
-            modifier = Modifier.padding(bottom = 10.dp),
-        )
-
-    }
 }
 
 @Composable

@@ -88,7 +88,7 @@ class WeatherRepository private constructor() {
         })
     }
 
-    private fun fetchWeatherForSaveLocations(locations: List<Location>): List<ForecastSaveLocation> {
+    fun fetchWeatherForSaveLocations(locations: List<Location>): List<ForecastSaveLocation> {
         val list: MutableList<ForecastSaveLocation> = mutableListOf()
 
         locations.forEach { item ->
@@ -99,6 +99,7 @@ class WeatherRepository private constructor() {
                     if (response.isSuccessful) {
                         val forecast = ForecastSaveLocation(location = item, currentWeather = response.body()!!.current)
                         list.add(forecast)
+                        forecastSavedLocations.postValue(list) // Обновление LiveData
                     } else {
                         Log.d(TAG_API, "Ошибка: ${response.code()}")
                     }
@@ -107,7 +108,6 @@ class WeatherRepository private constructor() {
                 override fun onFailure(call: Call<Forecast>, t: Throwable) {
                     Log.d(TAG_API, "Ошибка: ${t.message}")
                 }
-
             })
         }
 

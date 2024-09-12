@@ -16,6 +16,7 @@ import com.example.weatherapp.ui.theme.WeatherAppTheme
 import com.example.weatherapp.ui.views.locations.Locations
 import com.example.weatherapp.ui.views.home.Main
 import com.example.weatherapp.ui.views.Routes
+import com.example.weatherapp.ui.views.locations.LocationsSearch
 import com.example.weatherapp.ui.views.setting.AboutApp
 import com.example.weatherapp.ui.views.setting.Settings
 
@@ -36,10 +37,9 @@ class MainActivity : AppCompatActivity() {
 
                     NavHost(navController = navController, startDestination = Routes.Home.route) {
 
-                        composable(Routes.Home.route) {
-                            Main(navController, Modifier.padding(innerPadding))
-                        }
+                        composable(Routes.Home.route) { Main(navController, Modifier.padding(innerPadding)) }
                         composable(Routes.Locations.route) { Locations(navController, Modifier.padding(innerPadding)) }
+                        composable(Routes.LocationsSearch.route) { LocationsSearch(navController, Modifier.padding(innerPadding)) }
                         composable(Routes.Settings.route) { Settings(navController, Modifier.padding(innerPadding)) }
                         composable(Routes.AboutApp.route) { AboutApp(navController, Modifier.padding(innerPadding)) }
 
